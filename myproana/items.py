@@ -8,6 +8,7 @@ import datetime
 
 
 def extract_authorname(text):
+    # Extract authorname 
     text = re.sub('\n|\t|,', '', text).strip()
     splits = str(text).split(' ')
     text = ' '.join(splits[2:])
@@ -15,6 +16,7 @@ def extract_authorname(text):
 
 
 def clean_noposts(text):
+    # Clean nopost from or NA
     text = re.sub('\n|\t|,', '', text).strip()
     text = re.sub('posts', '', text).strip()
     value = str(text) if len(str(text)) > 0 else 'N/A'
@@ -22,6 +24,7 @@ def clean_noposts(text):
 
 
 def remove_tab(text):
+    # Remove tab
     text = re.sub('\n|\t|,', '', text).strip()
     if len(text) == 0:
         text = 'Admin'
@@ -29,6 +32,7 @@ def remove_tab(text):
 
 
 def clean_content(text):
+    # Clean content or NA
     text = re.sub('(<\/?(.*?)>)', '', text).strip()
     text = re.sub('\n|\t|,|\xa0', ' ', text)
     text = re.sub('\\\\', '', text)
@@ -37,6 +41,7 @@ def clean_content(text):
 
 
 def extract_sig(text):
+    # Extract Sign
     text = re.sub('[ \t]{4,}', '', text).strip()
     matches = re.findall('(>(.*?)<)', str(text))
     arr = []
@@ -50,6 +55,7 @@ def extract_sig(text):
 
 
 def converttodate_trd(text):
+    # Convert to date
     try:
         date = datetime.datetime.strptime(str(text), '%d %b %Y').strftime('%Y-%m-%d')
     except:
@@ -64,6 +70,7 @@ def converttodate_trd(text):
 
 
 def converttodate_ps(text):
+    # Convert to date
     text = re.sub('-', '', str(text))
     try:
         date = datetime.datetime.strptime(str(text), '%d %B %Y %I:%M %p').strftime('%Y-%m-%d')
@@ -79,14 +86,18 @@ def converttodate_ps(text):
 
 
 def remove_first(text):
+    # Remove first item in arr
     return str(text[1:])
 
 
 def converttostring(text):
+    # Convert to string
     return str(text)
 
 
 class PostItem(scrapy.Item):
+    # Set Post scrapy items       
+
     threadtitle = Field(
         input_processor=MapCompose(converttostring),
         output_processor=TakeFirst()
@@ -124,6 +135,8 @@ class PostItem(scrapy.Item):
 
 
 class ThreadItem(scrapy.Item):
+    # Set thread scrapy items         
+
     subforumname = Field(
         input_processor=MapCompose(remove_first),
         output_processor=TakeFirst()

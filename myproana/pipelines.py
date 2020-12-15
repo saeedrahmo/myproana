@@ -27,6 +27,7 @@ class MyproanaPipeline:
             self.process_post(item, spider)
 
     def process_thread(self, item, spider):
+        # Process thread data and prepare the model for db
         session = self.Session()
         thread = Thread()
         author = Author()
@@ -65,6 +66,7 @@ class MyproanaPipeline:
         return item
 
     def process_post(self, item, spider):
+        # Process post data and prepare the model for db
         session = self.Session()
         thread = Thread()
         author = Author()

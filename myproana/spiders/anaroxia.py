@@ -7,6 +7,7 @@ from scrapy.utils.log import configure_logging
 
 
 class AnaroxiaSpider(scrapy.Spider):
+    # Scrapy log
     configure_logging(install_root_handler=False)
     logging.basicConfig(
         filename='log.txt',
@@ -20,8 +21,9 @@ class AnaroxiaSpider(scrapy.Spider):
     def start_requests(self):
         start_url = "https://www.myproana.com/index.php/forum/62-anorexia-discussions/"#"https://www.myproana.com/index.php/forum/62-anorexia-discussions/"
         yield scrapy.Request(start_url, self.parse_thread)
-
+    
     def parse_thread(self, response):
+        # Web elements to extract thread
         for product in response.css("tr.__topic"):
             loader = ItemLoader(item=ThreadItem(), selector=product)
             loader.add_value('subforumname', response.css("div.ipsLayout_content h1::text").extract_first())
@@ -38,8 +40,9 @@ class AnaroxiaSpider(scrapy.Spider):
         next_page = response.css("ul.forward li.next a::attr(href)").extract_first()
         if next_page is not None:
             yield response.follow(next_page, callback=self.parse_thread)
-
+    
     def parse_post(self, response):
+        # Web elements to extract post
         thread_item = response.meta['thread_item']
         thread_loader = ItemLoader(item=thread_item)
         threadtitle = thread_loader.get_collected_values('threadtitle')
